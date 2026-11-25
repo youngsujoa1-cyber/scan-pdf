@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스캔 PDF (ScanPDF) — 문서를 찍어 바로 PDF로</title>
+<meta name="description" content="스캔 PDF는 종이 문서를 카메라로 찍어 바로 PDF로 만드는 안드로이드 앱입니다. 자르기·필터·합치기·압축을 모두 기기 안에서 처리하고, 사진과 PDF는 서버로 보내지 않습니다. 개발자 Topster.">
+<meta property="og:title" content="스캔 PDF (ScanPDF) — 문서를 찍어 바로 PDF로">
+<meta property="og:description" content="문서 스캔 · 자르기 · 필터 · PDF 합치기/압축을 모두 기기 안에서. 사진과 PDF는 외부로 전송되지 않습니다.">
+<meta name="theme-color" content="#0F141B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F6FA" media="(prefers-color-scheme: light)">
+<style>
+  :root{
+    --bg:#F3F6FA; --card:#FFFFFF; --text:#111A24; --muted:#5A6A7B;
+    --line:#DCE5EF; --accent:#B87400; --accent-soft:#FFF0D2; --profit:#0E8A4F;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0F141B; --card:#161D26; --text:#F2F6FA; --muted:#9AA9BA;
+      --line:#2C3846; --accent:#FFC24B; --accent-soft:#4A3A12; --profit:#46D98A;
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+    line-height:1.7; font-size:16px;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:28px 18px 60px}
+  .hero{display:flex; gap:16px; align-items:center; margin:12px 0 22px}
+  .icon{
+    width:64px; height:64px; flex:0 0 64px; border-radius:16px;
+    background:linear-gradient(145deg,#1B2430,#0F141B);
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .icon svg{width:38px; height:38px}
+  h1{font-size:26px; margin:0 0 2px; letter-spacing:-0.02em; line-height:1.25}
+  .byline{color:var(--muted); font-size:14px; margin:0}
+  .lead{font-size:17px; margin:0 0 24px}
+  .lead span{color:var(--muted)}
+  h2{font-size:18px; margin:30px 0 10px; letter-spacing:-0.01em}
+  .grid{display:grid; grid-template-columns:1fr; gap:12px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px}
+  .card h3{margin:0 0 6px; font-size:15px}
+  .card p{margin:0; color:var(--muted); font-size:14px}
+  .links{display:grid; grid-template-columns:1fr; gap:12px; margin-top:8px}
+  a.btn{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px; text-decoration:none; color:var(--text); font-weight:600;
+  }
+  a.btn small{display:block; font-weight:400; color:var(--muted); font-size:13px}
+  a.btn:hover{border-color:var(--accent); background:var(--accent-soft)}
+  a.btn .arrow{color:var(--accent); font-size:18px}
+  a{color:var(--accent)}
+  .note{font-size:14px; color:var(--muted); background:var(--accent-soft); border-radius:12px; padding:14px 16px; margin-top:18px}
+  .note p{margin:0}
+  .note b{color:var(--text)}
+  table{width:100%; border-collapse:collapse; font-size:14.5px; margin:8px 0; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden}
+  th,td{text-align:left; vertical-align:top; padding:10px 14px; border-bottom:1px solid var(--line)}
+  th{color:var(--muted); font-weight:600; white-space:nowrap; width:34%}
+  tr:last-child th, tr:last-child td{border-bottom:0}
+  code{background:var(--accent-soft); border-radius:5px; padding:1px 5px; font-size:13px; overflow-wrap:anywhere}
+  footer{margin-top:36px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; line-height:1.9}
+  footer a{color:var(--muted)}
+  @media (min-width:620px){
+    .wrap{padding:48px 24px 80px}
+    h1{font-size:34px}
+    .icon{width:76px;height:76px;flex-basis:76px;border-radius:18px}
+    .icon svg{width:44px;height:44px}
+    .grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="none">
+        <rect x="9" y="6" width="26" height="36" rx="4" fill="#F2F6FA"/>
+        <rect x="14" y="13" width="16" height="2.6" rx="1.3" fill="#0F141B"/>
+        <rect x="14" y="19" width="11" height="2.6" rx="1.3" fill="#0F141B"/>
+        <rect x="14" y="25" width="14" height="2.6" rx="1.3" fill="#0F141B"/>
+        <path d="M24 31l4 4 8-8" stroke="#FFC24B" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 3v4M29 3v4" stroke="#FFC24B" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <h1>스캔 PDF <span style="font-weight:400;color:var(--muted);font-size:.62em">ScanPDF</span></h1>
+      <p class="byline">문서를 찍어 바로 PDF로 · 개발자 Topster</p>
+    </div>
+  </div>
+
+  <p class="lead">
+    스캔 PDF는 종이 문서를 휴대폰 카메라로 찍어 <b>바로 PDF 파일</b>로 만들어 주는 안드로이드 앱입니다.
+    <span>보정·자르기·합치기·압축을 모두 기기 안에서 처리하며, 찍은 사진과 만든 PDF는 외부 서버로 전송되지 않습니다.</span>
+  </p>
+
+  <h2>주요 기능</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>카메라 연속 스캔</h3>
+      <p>문서 가이드 프레임에 맞춰 여러 장을 연속으로 찍고, 필요하면 갤러리 사진을 더합니다. 플래시와 촬영 썸네일도 그 자리에서.</p>
+    </div>
+    <div class="card">
+      <h3>자르기 · 필터</h3>
+      <p>모서리 4점을 끌어 원근을 바로잡고, 원본·문서·흑백·그레이 필터로 글씨를 또렷하게 만듭니다.</p>
+    </div>
+    <div class="card">
+      <h3>PDF 만들기 · 합치기 · 압축</h3>
+      <p>페이지 순서를 정해 PDF로 만들고, 여러 PDF를 하나로 합치거나 용량을 줄입니다. 화질은 300·200·150dpi 중에서 고릅니다.</p>
+    </div>
+    <div class="card">
+      <h3>뷰어 · 공유</h3>
+      <p>만든 PDF를 넘겨 보고, 카톡·메일로 공유하거나 다운로드 폴더에 저장, 다른 PDF 앱으로 열 수 있습니다.</p>
+    </div>
+    <div class="card">
+      <h3>5개 언어</h3>
+      <p>한국어·English·日本語·中文·Español. 처음 실행할 때 고른 언어로 앱 전체가 바뀌고, 설정에서 언제든 다시 고를 수 있습니다.</p>
+    </div>
+    <div class="card">
+      <h3>기기 안에서만</h3>
+      <p>사진·PDF 처리와 저장이 모두 기기 안에서 이루어집니다. 회원가입 없이 쓸 수 있고, 문서 내용은 어디로도 보내지 않습니다.</p>
+    </div>
+  </div>
+
+  <h2>앱 정보 및 지원</h2>
+  <div class="links">
+    <a class="btn" href="privacy.html">
+      <span>개인정보처리방침<small>Privacy Policy · 시행일 2026년 11월 25일</small></span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="btn" href="mailto:youngsujoa1@gmail.com">
+      <span>문의하기<small>youngsujoa1@gmail.com · 개발자 Topster</small></span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="btn" href="app-ads.txt">
+      <span>app-ads.txt<small>AdMob 게시자 인증 파일 (google.com, pub-4832055633016363)</small></span>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <h2>앱 정보</h2>
+  <table>
+    <tr><th>앱 이름</th><td>스캔 PDF (ScanPDF)</td></tr>
+    <tr><th>플랫폼</th><td>Android (8.0 이상)</td></tr>
+    <tr><th>패키지</th><td><code>com.youngsu.scanpdf</code></td></tr>
+    <tr><th>버전</th><td>1.0.4</td></tr>
+    <tr><th>언어</th><td>한국어 · English · 日本語 · 中文 · Español</td></tr>
+    <tr><th>개발자</th><td>Topster</td></tr>
+    <tr><th>문의</th><td><a href="mailto:youngsujoa1@gmail.com">youngsujoa1@gmail.com</a></td></tr>
+  </table>
+
+  <div class="note">
+    <p><b>개인정보 안내:</b> 촬영하거나 불러온 문서 사진과 앱에서 만든 PDF는 기기에만 저장되며 개발자는 열람할 수 없습니다. 카메라 권한은 문서 촬영에만 쓰이고, 사진은 시스템 사진 선택기로 고른 것만 받습니다. 기기 밖 통신은 광고(Google AdMob)를 불러오는 통신뿐입니다. 자세한 내용은 <a href="privacy.html">개인정보처리방침</a>을 확인해 주세요.</p>
+  </div>
+
+  <footer>
+    스캔 PDF (ScanPDF) · 개발자 Topster · <a href="mailto:youngsujoa1@gmail.com">youngsujoa1@gmail.com</a><br>
+    <a href="privacy.html">개인정보처리방침</a> · <a href="app-ads.txt">app-ads.txt</a>
+  </footer>
+</div>
+</body>
+</html>
