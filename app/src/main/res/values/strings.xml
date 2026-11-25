@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ScanPDF</string>
+
+    <string name="tab_scan">Scan</string>
+    <string name="tab_docs">My PDFs</string>
+    <string name="tab_settings">Settings</string>
+
+    <string name="home_subtitle">Scan a document and save it as PDF</string>
+    <string name="hero_title">Scan with camera</string>
+    <string name="hero_sub">Shoot several pages in a row, save them as one PDF</string>
+    <string name="hero_action">Start</string>
+    <string name="action_photos">From photos</string>
+    <string name="action_photos_sub">Pick from gallery</string>
+    <string name="action_merge">Merge PDFs</string>
+    <string name="action_merge_sub">Many files into one</string>
+    <string name="action_compress">Compress PDF</string>
+    <string name="action_compress_sub">Shrink the file size</string>
+    <string name="action_open">Open PDF</string>
+    <string name="action_open_sub">View saved files</string>
+    <string name="recent_title">RECENT PDFS</string>
+    <string name="see_all">See all</string>
+    <string name="empty_recent">No PDFs yet. Scan your first document.</string>
+    <string name="empty_recent_action">Scan a document</string>
+
+    <string name="docs_title">My PDFs</string>
+    <string name="docs_count">%1$d files · %2$s</string>
+    <string name="docs_empty_title">No PDFs yet</string>
+    <string name="docs_empty_body">Documents you scan will appear here.</string>
+    <string name="docs_storage_note">Files stay on this device only.</string>
+    <string name="item_meta">%1$d pages · %2$s · %3$s</string>
+    <string name="date_today">today %1$s</string>
+    <string name="date_yesterday">yesterday %1$s</string>
+    <string name="page_single">1 page</string>
+
+    <string name="camera_title">Scan document</string>
+    <string name="camera_hint">Fit the document inside the frame</string>
+    <string name="camera_permission_title">Camera permission needed</string>
+    <string name="camera_permission_body">Allow camera access to scan documents into PDF.</string>
+    <string name="camera_permission_denied">Camera access is blocked. Allow it in Settings.</string>
+    <string name="camera_settings">Open settings</string>
+    <string name="camera_start_failed">Could not start the camera: %1$s</string>
+    <string name="camera_shots_taken">%1$d pages</string>
+    <string name="camera_done">Done</string>
+    <string name="camera_gallery">Gallery</string>
+    <string name="camera_capture">Capture</string>
+    <string name="camera_saved_failed">Could not save the photo.</string>
+
+    <string name="editor_title">Edit pages</string>
+    <string name="editor_counter">%1$d / %2$d</string>
+    <string name="editor_make_pdf">Make PDF</string>
+    <string name="filter_title">FILTER</string>
+    <string name="filter_original">Original</string>
+    <string name="filter_document">Document</string>
+    <string name="filter_bw">B&amp;W</string>
+    <string name="filter_gray">Grayscale</string>
+    <string name="tool_rotate">Rotate</string>
+    <string name="tool_crop">Crop</string>
+    <string name="tool_move_left">Move up</string>
+    <string name="tool_move_right">Move down</string>
+    <string name="tool_delete">Delete</string>
+    <string name="tool_add">Add</string>
+    <string name="editor_delete_page">Delete this page?</string>
+    <string name="editor_leave_title">Discard edits?</string>
+    <string name="editor_leave_body">The captured pages will be lost.</string>
+    <string name="editor_leave_confirm">Discard</string>
+    <string name="editor_need_one_page">Add at least one page.</string>
+    <string name="editor_preview_failed">Could not show this page.</string>
+    <string name="editor_page_index">Page %1$d</string>
+
+    <string name="crop_title">Crop</string>
+    <string name="crop_hint">Drag the corners to fit the document</string>
+    <string name="crop_reset">Select all</string>
+    <string name="crop_apply">Apply</string>
+
+    <string name="save_title">Save PDF</string>
+    <string name="save_name_label">File name</string>
+    <string name="save_confirm">Save</string>
+    <string name="save_saving">Creating PDF…</string>
+    <string name="save_progress">Preparing page %1$d/%2$d</string>
+    <string name="save_done_title">PDF saved</string>
+    <string name="save_done_body">%1$s · %2$d pages · %3$s</string>
+    <string name="save_error">Could not create the PDF: %1$s</string>
+    <string name="open">Open</string>
+    <string name="share">Share</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="close">Close</string>
+
+    <string name="rename_title">Rename</string>
+    <string name="rename_invalid">Enter a file name.</string>
+    <string name="rename_done">Renamed</string>
+    <string name="delete_title">Delete file</string>
+    <string name="delete_body">Delete “%1$s”? This cannot be undone.</string>
+    <string name="deleted">Deleted</string>
+    <string name="share_no_app">No app can share this file.</string>
+    <string name="open_error">Could not open the PDF.</string>
+
+    <string name="merge_title">Merge PDFs</string>
+    <string name="merge_hint">Select two or more PDFs. They are merged in the order shown in the list.</string>
+    <string name="merge_start">Merge %1$d files</string>
+    <string name="merge_progress">Merging… %1$d/%2$d</string>
+    <string name="merge_done_title">PDFs merged</string>
+    <string name="merge_need_two">Select at least two PDFs.</string>
+    <string name="merge_error">Could not merge: %1$s</string>
+    <string name="merge_choose">Choose PDFs</string>
+
+    <string name="compress_pick_title">Choose a PDF to compress</string>
+    <string name="compress_strength">Compression level</string>
+    <string name="compress_light">Light</string>
+    <string name="compress_light_sub">Best quality</string>
+    <string name="compress_normal">Balanced</string>
+    <string name="compress_normal_sub">Recommended</string>
+    <string name="compress_strong">Strong</string>
+    <string name="compress_strong_sub">Smallest file</string>
+    <string name="compress_progress">Compressing… %1$d/%2$d</string>
+    <string name="compress_done_title">Compression done</string>
+    <string name="compress_compare">%1$s → %2$s</string>
+    <string name="compress_saved">%1$d%% smaller</string>
+    <string name="compress_no_gain">This PDF is already compact. The original file was kept.</string>
+    <string name="compress_error">Could not compress: %1$s</string>
+    <string name="compress_saving">Saving…</string>
+
+    <string name="viewer_loading">Opening PDF…</string>
+    <string name="viewer_page_of">%1$d / %2$d</string>
+    <string name="export_downloads">Save to Downloads</string>
+    <string name="export_done">Saved to Download/ScanPDF</string>
+    <string name="export_failed">Could not save to Downloads.</string>
+    <string name="open_with">Open with another app</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_quality">PDF QUALITY</string>
+    <string name="quality_high">High</string>
+    <string name="quality_high_sub">300 dpi · larger file</string>
+    <string name="quality_normal">Standard</string>
+    <string name="quality_normal_sub">200 dpi · recommended</string>
+    <string name="quality_small">Small size</string>
+    <string name="quality_small_sub">150 dpi · smallest file</string>
+    <string name="settings_privacy">PRIVACY</string>
+    <string name="settings_privacy_body">Every scan, merge and compression runs on this device. Your documents are never uploaded.</string>
+    <string name="settings_ads">ADS</string>
+    <string name="settings_ads_test">Showing Google test ads</string>
+    <string name="settings_ads_live">Live ads</string>
+    <string name="settings_ads_body">A banner at the bottom and a full-screen ad after saving keep the app free.</string>
+    <string name="settings_storage">STORAGE</string>
+    <string name="settings_storage_body">PDFs are kept in the app private folder. Use Share or Save to Downloads to keep a copy elsewhere.</string>
+    <string name="settings_about">ABOUT</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_language">LANGUAGE</string>
+    <string name="language_title">App language</string>
+    <string name="language_system">Follow phone language</string>
+    <string name="settings_language_note">Follow your phone or pick a language for this app only.</string>
+    <string name="onboarding_language_title">Choose your language</string>
+    <string name="onboarding_language_sub">Pick the language you want to use. The app opens in it from now on.</string>
+    <string name="onboarding_language_note">You can change it anytime in Settings → App language.</string>
+    <string name="onboarding_start">Start</string>
+    <string name="settings_guide">HOW TO USE</string>
+    <string name="guide_1">Scan: shoot pages in a row, then fix rotation, crop and filter.</string>
+    <string name="guide_2">Pages are saved as one PDF in the quality you choose.</string>
+    <string name="guide_3">Merge combines PDFs in the order you select. Compress re-draws pages smaller.</string>
+
+    <string name="processing">Working…</string>
+    <string name="merge_default_prefix">Merged</string>
+    <string name="compress_suffix">compressed</string>
+    <string name="file_prefix">Scan</string>
+</resources>

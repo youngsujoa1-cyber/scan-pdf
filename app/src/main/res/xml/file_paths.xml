@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- 만든 PDF: 공유·다른 앱으로 열기 -->
+    <external-files-path
+        name="pdfs"
+        path="PDF/" />
+    <!-- 촬영한 원본(편집 중) 및 미리보기 -->
+    <cache-path
+        name="cache"
+        path="." />
+    <files-path
+        name="files"
+        path="." />
+</paths>

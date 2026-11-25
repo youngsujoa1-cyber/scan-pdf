@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ScanPDF 팔레트 — 밤에도 눈이 편한 딥 네이비 + 일렉트릭 블루/에메랄드 -->
+<resources>
+    <color name="bg">#060A12</color>
+    <color name="bg_deep">#03060C</color>
+    <color name="surface">#0C1420</color>
+    <color name="surface_alt">#111A28</color>
+    <color name="surface_high">#182336</color>
+    <color name="outline">#22314A</color>
+    <color name="outline_soft">#182338</color>
+    <color name="divider">#141D2B</color>
+
+    <color name="text_primary">#EAF0FA</color>
+    <color name="text_secondary">#93A4BE</color>
+    <color name="text_tertiary">#63758F</color>
+
+    <color name="accent">#3D8BFF</color>
+    <color name="accent_strong">#2F7BF0</color>
+    <color name="accent_dim">#12294D</color>
+    <color name="accent_soft">#1B3A66</color>
+    <color name="on_accent">#FFFFFF</color>
+
+    <color name="emerald">#2BD9A6</color>
+    <color name="emerald_dim">#0E3A31</color>
+    <color name="on_emerald">#03231C</color>
+
+    <color name="danger">#FF5C72</color>
+    <color name="danger_dim">#3A1620</color>
+    <color name="warn">#FFB020</color>
+    <color name="warn_dim">#3A2B10</color>
+
+    <color name="scrim">#CC04070D</color>
+    <color name="paper">#FFFFFF</color>
+    <color name="paper_shadow">#33000000</color>
+
+    <color name="hero_start">#143A78</color>
+    <color name="hero_end">#0A1424</color>
+    <color name="nav_bg">#0A111C</color>
+</resources>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">스캔 PDF</string>
+
+    <string name="tab_scan">스캔</string>
+    <string name="tab_docs">내 PDF</string>
+    <string name="tab_settings">설정</string>
+
+    <string name="home_subtitle">문서를 찍어 바로 PDF로</string>
+    <string name="hero_title">카메라로 스캔</string>
+    <string name="hero_sub">여러 장을 연속으로 찍어 한 번에 PDF로</string>
+    <string name="hero_action">시작</string>
+    <string name="action_photos">사진에서 PDF</string>
+    <string name="action_photos_sub">갤러리에서 골라 변환</string>
+    <string name="action_merge">PDF 합치기</string>
+    <string name="action_merge_sub">여러 개를 하나로</string>
+    <string name="action_compress">PDF 압축</string>
+    <string name="action_compress_sub">용량을 확 줄이기</string>
+    <string name="action_open">PDF 열기</string>
+    <string name="action_open_sub">저장된 PDF 보기</string>
+    <string name="recent_title">최근 만든 PDF</string>
+    <string name="see_all">모두 보기</string>
+    <string name="empty_recent">아직 만든 PDF가 없습니다. 첫 문서를 스캔해 보세요.</string>
+    <string name="empty_recent_action">카메라로 스캔</string>
+
+    <string name="docs_title">내 PDF</string>
+    <string name="docs_count">%1$d개 · %2$s</string>
+    <string name="docs_empty_title">PDF가 없습니다</string>
+    <string name="docs_empty_body">스캔한 문서가 여기에 쌓입니다.</string>
+    <string name="docs_storage_note">모든 파일은 이 기기 안에만 저장됩니다.</string>
+    <string name="item_meta">%1$d페이지 · %2$s · %3$s</string>
+    <string name="date_today">오늘 %1$s</string>
+    <string name="date_yesterday">어제 %1$s</string>
+    <string name="page_single">1페이지</string>
+
+    <string name="camera_title">문서 스캔</string>
+    <string name="camera_hint">문서가 프레임 안에 오도록 맞춰 주세요</string>
+    <string name="camera_permission_title">카메라 권한이 필요합니다</string>
+    <string name="camera_permission_body">문서를 찍어 PDF로 만들려면 카메라 사용을 허용해 주세요.</string>
+    <string name="camera_permission_denied">카메라가 막혀 있습니다. 설정에서 허용해 주세요.</string>
+    <string name="camera_settings">설정 열기</string>
+    <string name="camera_start_failed">카메라를 시작할 수 없습니다: %1$s</string>
+    <string name="camera_shots_taken">%1$d장</string>
+    <string name="camera_done">완료</string>
+    <string name="camera_gallery">갤러리</string>
+    <string name="camera_capture">촬영</string>
+    <string name="camera_saved_failed">사진을 저장하지 못했습니다.</string>
+
+    <string name="editor_title">페이지 편집</string>
+    <string name="editor_counter">%1$d / %2$d</string>
+    <string name="editor_make_pdf">PDF 만들기</string>
+    <string name="filter_title">필터</string>
+    <string name="filter_original">원본</string>
+    <string name="filter_document">문서</string>
+    <string name="filter_bw">흑백</string>
+    <string name="filter_gray">그레이</string>
+    <string name="tool_rotate">회전</string>
+    <string name="tool_crop">자르기</string>
+    <string name="tool_move_left">앞으로</string>
+    <string name="tool_move_right">뒤로</string>
+    <string name="tool_delete">삭제</string>
+    <string name="tool_add">추가</string>
+    <string name="editor_delete_page">이 페이지를 삭제할까요?</string>
+    <string name="editor_leave_title">편집을 그만둘까요?</string>
+    <string name="editor_leave_body">찍은 페이지가 사라집니다.</string>
+    <string name="editor_leave_confirm">그만두기</string>
+    <string name="editor_need_one_page">페이지를 한 장 이상 추가해 주세요.</string>
+    <string name="editor_preview_failed">이 페이지를 표시하지 못했습니다.</string>
+    <string name="editor_page_index">%1$d페이지</string>
+
+    <string name="crop_title">자르기</string>
+    <string name="crop_hint">모서리를 끌어 문서 영역을 맞춰 주세요</string>
+    <string name="crop_reset">전체 선택</string>
+    <string name="crop_apply">적용</string>
+
+    <string name="save_title">PDF 저장</string>
+    <string name="save_name_label">파일 이름</string>
+    <string name="save_confirm">저장</string>
+    <string name="save_saving">PDF를 만드는 중…</string>
+    <string name="save_progress">%1$d/%2$d페이지 준비 중</string>
+    <string name="save_done_title">PDF를 저장했습니다</string>
+    <string name="save_done_body">%1$s · %2$d페이지 · %3$s</string>
+    <string name="save_error">PDF를 만들지 못했습니다: %1$s</string>
+    <string name="open">열기</string>
+    <string name="share">공유</string>
+    <string name="rename">이름 변경</string>
+    <string name="delete">삭제</string>
+    <string name="cancel">취소</string>
+    <string name="done">완료</string>
+    <string name="close">닫기</string>
+
+    <string name="rename_title">이름 변경</string>
+    <string name="rename_invalid">이름을 입력해 주세요.</string>
+    <string name="rename_done">이름을 바꿨습니다</string>
+    <string name="delete_title">파일 삭제</string>
+    <string name="delete_body">“%1$s” 파일을 삭제할까요? 되돌릴 수 없습니다.</string>
+    <string name="deleted">삭제했습니다</string>
+    <string name="share_no_app">공유할 수 있는 앱이 없습니다.</string>
+    <string name="open_error">PDF를 열 수 없습니다.</string>
+
+    <string name="merge_title">PDF 합치기</string>
+    <string name="merge_hint">합칠 PDF를 2개 이상 선택하세요. 목록에 보이는 순서대로 이어집니다.</string>
+    <string name="merge_start">%1$d개 합치기</string>
+    <string name="merge_progress">합치는 중… %1$d/%2$d</string>
+    <string name="merge_done_title">PDF를 합쳤습니다</string>
+    <string name="merge_need_two">PDF를 2개 이상 선택해 주세요.</string>
+    <string name="merge_error">합치지 못했습니다: %1$s</string>
+    <string name="merge_choose">PDF 선택</string>
+
+    <string name="compress_pick_title">압축할 PDF를 선택하세요</string>
+    <string name="compress_strength">압축 강도</string>
+    <string name="compress_light">약하게</string>
+    <string name="compress_light_sub">화질 우선</string>
+    <string name="compress_normal">보통</string>
+    <string name="compress_normal_sub">균형</string>
+    <string name="compress_strong">강하게</string>
+    <string name="compress_strong_sub">용량 우선</string>
+    <string name="compress_progress">압축하는 중… %1$d/%2$d</string>
+    <string name="compress_done_title">압축 완료</string>
+    <string name="compress_compare">%1$s → %2$s</string>
+    <string name="compress_saved">%1$d%% 감소</string>
+    <string name="compress_no_gain">더 줄일 수 없는 PDF입니다. 원본을 그대로 두었습니다.</string>
+    <string name="compress_error">압축하지 못했습니다: %1$s</string>
+    <string name="compress_saving">저장 중…</string>
+
+    <string name="viewer_loading">PDF를 여는 중…</string>
+    <string name="viewer_page_of">%1$d / %2$d</string>
+    <string name="export_downloads">다운로드에 저장</string>
+    <string name="export_done">Download/ScanPDF 폴더에 저장했습니다</string>
+    <string name="export_failed">다운로드 폴더에 저장하지 못했습니다.</string>
+    <string name="open_with">다른 앱으로 열기</string>
+
+    <string name="settings_title">설정</string>
+    <string name="settings_quality">PDF 화질</string>
+    <string name="quality_high">고화질</string>
+    <string name="quality_high_sub">300dpi · 큰 파일</string>
+    <string name="quality_normal">표준</string>
+    <string name="quality_normal_sub">200dpi · 권장</string>
+    <string name="quality_small">용량 우선</string>
+    <string name="quality_small_sub">150dpi · 가장 작게</string>
+    <string name="settings_privacy">개인정보</string>
+    <string name="settings_privacy_body">스캔·병합·압축은 모두 이 기기 안에서 처리됩니다. 문서가 서버로 전송되지 않습니다.</string>
+    <string name="settings_ads">광고</string>
+    <string name="settings_ads_test">Google 테스트 광고로 표시 중</string>
+    <string name="settings_ads_live">실제 광고</string>
+    <string name="settings_ads_body">화면 아래 배너와 저장 후 전면 광고로 앱을 무료로 유지합니다.</string>
+    <string name="settings_storage">저장 위치</string>
+    <string name="settings_storage_body">PDF는 앱 전용 폴더에 저장됩니다. 다른 곳에 보관하려면 공유하거나 다운로드 폴더에 저장하세요.</string>
+    <string name="settings_about">앱 정보</string>
+    <string name="settings_version">버전 %1$s</string>
+    <string name="settings_language">언어</string>
+    <string name="language_title">앱 언어</string>
+    <string name="language_system">기기 언어 따르기</string>
+    <string name="settings_language_note">휴대폰 언어를 따르거나 앱에서만 쓸 언어를 고를 수 있습니다.</string>
+    <string name="onboarding_language_title">언어 선택</string>
+    <string name="onboarding_language_sub">앱에서 사용할 언어를 골라 주세요. 지금부터 이 언어로 열립니다.</string>
+    <string name="onboarding_language_note">설정 → 앱 언어에서 언제든 바꿀 수 있습니다.</string>
+    <string name="onboarding_start">시작하기</string>
+    <string name="settings_guide">이용 안내</string>
+    <string name="guide_1">스캔: 여러 장을 연속으로 찍고 회전·자르기·필터로 다듬습니다.</string>
+    <string name="guide_2">고른 화질로 페이지가 PDF 한 파일에 담깁니다.</string>
+    <string name="guide_3">합치기는 선택한 순서대로, 압축은 페이지를 다시 그려 용량을 줄입니다.</string>
+
+    <string name="processing">처리 중…</string>
+    <string name="merge_default_prefix">병합</string>
+    <string name="compress_suffix">압축</string>
+    <string name="file_prefix">스캔</string>
+</resources>

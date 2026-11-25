@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">スキャンPDF</string>
+
+    <string name="tab_scan">スキャン</string>
+    <string name="tab_docs">マイPDF</string>
+    <string name="tab_settings">設定</string>
+
+    <string name="home_subtitle">書類を撮ってすぐPDFに</string>
+    <string name="hero_title">カメラでスキャン</string>
+    <string name="hero_sub">複数ページを続けて撮り、1つのPDFに</string>
+    <string name="hero_action">開始</string>
+    <string name="action_photos">写真からPDF</string>
+    <string name="action_photos_sub">ギャラリーから選択</string>
+    <string name="action_merge">PDFを結合</string>
+    <string name="action_merge_sub">複数を1つに</string>
+    <string name="action_compress">PDFを圧縮</string>
+    <string name="action_compress_sub">容量を小さく</string>
+    <string name="action_open">PDFを開く</string>
+    <string name="action_open_sub">保存したPDFを見る</string>
+    <string name="recent_title">最近作成したPDF</string>
+    <string name="see_all">すべて見る</string>
+    <string name="empty_recent">まだPDFがありません。最初の書類をスキャンしましょう。</string>
+    <string name="empty_recent_action">カメラでスキャン</string>
+
+    <string name="docs_title">マイPDF</string>
+    <string name="docs_count">%1$d件 · %2$s</string>
+    <string name="docs_empty_title">PDFがありません</string>
+    <string name="docs_empty_body">スキャンした書類がここに並びます。</string>
+    <string name="docs_storage_note">ファイルはこの端末内だけに保存されます。</string>
+    <string name="item_meta">%1$dページ · %2$s · %3$s</string>
+    <string name="date_today">今日 %1$s</string>
+    <string name="date_yesterday">昨日 %1$s</string>
+    <string name="page_single">1ページ</string>
+
+    <string name="camera_title">書類スキャン</string>
+    <string name="camera_hint">書類が枠内に収まるようにしてください</string>
+    <string name="camera_permission_title">カメラの権限が必要です</string>
+    <string name="camera_permission_body">書類を撮影してPDFにするには、カメラの使用を許可してください。</string>
+    <string name="camera_permission_denied">カメラがブロックされています。設定で許可してください。</string>
+    <string name="camera_settings">設定を開く</string>
+    <string name="camera_start_failed">カメラを起動できません: %1$s</string>
+    <string name="camera_shots_taken">%1$d枚</string>
+    <string name="camera_done">完了</string>
+    <string name="camera_gallery">ギャラリー</string>
+    <string name="camera_capture">撮影</string>
+    <string name="camera_saved_failed">写真を保存できませんでした。</string>
+
+    <string name="editor_title">ページ編集</string>
+    <string name="editor_counter">%1$d / %2$d</string>
+    <string name="editor_make_pdf">PDFを作成</string>
+    <string name="filter_title">フィルター</string>
+    <string name="filter_original">原本</string>
+    <string name="filter_document">書類</string>
+    <string name="filter_bw">白黒</string>
+    <string name="filter_gray">グレー</string>
+    <string name="tool_rotate">回転</string>
+    <string name="tool_crop">トリミング</string>
+    <string name="tool_move_left">前へ</string>
+    <string name="tool_move_right">後ろへ</string>
+    <string name="tool_delete">削除</string>
+    <string name="tool_add">追加</string>
+    <string name="editor_delete_page">このページを削除しますか？</string>
+    <string name="editor_leave_title">編集をやめますか？</string>
+    <string name="editor_leave_body">撮影したページは失われます。</string>
+    <string name="editor_leave_confirm">やめる</string>
+    <string name="editor_need_one_page">ページを1枚以上追加してください。</string>
+    <string name="editor_preview_failed">このページを表示できませんでした。</string>
+    <string name="editor_page_index">%1$dページ</string>
+
+    <string name="crop_title">トリミング</string>
+    <string name="crop_hint">角をドラッグして書類の範囲に合わせてください</string>
+    <string name="crop_reset">全体を選択</string>
+    <string name="crop_apply">適用</string>
+
+    <string name="save_title">PDFを保存</string>
+    <string name="save_name_label">ファイル名</string>
+    <string name="save_confirm">保存</string>
+    <string name="save_saving">PDFを作成中…</string>
+    <string name="save_progress">%1$d/%2$dページを準備中</string>
+    <string name="save_done_title">PDFを保存しました</string>
+    <string name="save_done_body">%1$s · %2$dページ · %3$s</string>
+    <string name="save_error">PDFを作成できませんでした: %1$s</string>
+    <string name="open">開く</string>
+    <string name="share">共有</string>
+    <string name="rename">名前を変更</string>
+    <string name="delete">削除</string>
+    <string name="cancel">キャンセル</string>
+    <string name="done">完了</string>
+    <string name="close">閉じる</string>
+
+    <string name="rename_title">名前を変更</string>
+    <string name="rename_invalid">名前を入力してください。</string>
+    <string name="rename_done">名前を変更しました</string>
+    <string name="delete_title">ファイルを削除</string>
+    <string name="delete_body">「%1$s」を削除しますか？元に戻せません。</string>
+    <string name="deleted">削除しました</string>
+    <string name="share_no_app">共有できるアプリがありません。</string>
+    <string name="open_error">PDFを開けませんでした。</string>
+
+    <string name="merge_title">PDFを結合</string>
+    <string name="merge_hint">結合するPDFを2つ以上選んでください。一覧の順に結合されます。</string>
+    <string name="merge_start">%1$d件を結合</string>
+    <string name="merge_progress">結合中… %1$d/%2$d</string>
+    <string name="merge_done_title">PDFを結合しました</string>
+    <string name="merge_need_two">PDFを2つ以上選んでください。</string>
+    <string name="merge_error">結合できませんでした: %1$s</string>
+    <string name="merge_choose">PDFを選択</string>
+
+    <string name="compress_pick_title">圧縮するPDFを選んでください</string>
+    <string name="compress_strength">圧縮レベル</string>
+    <string name="compress_light">弱め</string>
+    <string name="compress_light_sub">画質優先</string>
+    <string name="compress_normal">標準</string>
+    <string name="compress_normal_sub">バランス</string>
+    <string name="compress_strong">強め</string>
+    <string name="compress_strong_sub">容量優先</string>
+    <string name="compress_progress">圧縮中… %1$d/%2$d</string>
+    <string name="compress_done_title">圧縮が完了しました</string>
+    <string name="compress_compare">%1$s → %2$s</string>
+    <string name="compress_saved">%1$d%% 削減</string>
+    <string name="compress_no_gain">これ以上小さくできません。元のファイルを残しました。</string>
+    <string name="compress_error">圧縮できませんでした: %1$s</string>
+    <string name="compress_saving">保存中…</string>
+
+    <string name="viewer_loading">PDFを開いています…</string>
+    <string name="viewer_page_of">%1$d / %2$d</string>
+    <string name="export_downloads">ダウンロードに保存</string>
+    <string name="export_done">Download/ScanPDF に保存しました</string>
+    <string name="export_failed">ダウンロードに保存できませんでした。</string>
+    <string name="open_with">他のアプリで開く</string>
+
+    <string name="settings_title">設定</string>
+    <string name="settings_quality">PDF画質</string>
+    <string name="quality_high">高画質</string>
+    <string name="quality_high_sub">300dpi · 大きいファイル</string>
+    <string name="quality_normal">標準</string>
+    <string name="quality_normal_sub">200dpi · おすすめ</string>
+    <string name="quality_small">容量優先</string>
+    <string name="quality_small_sub">150dpi · 最小サイズ</string>
+    <string name="settings_privacy">プライバシー</string>
+    <string name="settings_privacy_body">スキャン・結合・圧縮はすべてこの端末内で処理されます。書類がサーバーに送信されることはありません。</string>
+    <string name="settings_ads">広告</string>
+    <string name="settings_ads_test">Googleテスト広告を表示中</string>
+    <string name="settings_ads_live">実際の広告</string>
+    <string name="settings_ads_body">画面下のバナーと保存後の全画面広告でアプリを無料にしています。</string>
+    <string name="settings_storage">保存場所</string>
+    <string name="settings_storage_body">PDFはアプリ専用フォルダに保存されます。別の場所に残すには共有またはダウンロードへの保存を使ってください。</string>
+    <string name="settings_about">アプリ情報</string>
+    <string name="settings_version">バージョン %1$s</string>
+    <string name="settings_language">言語</string>
+    <string name="language_title">アプリの言語</string>
+    <string name="language_system">端末の言語に従う</string>
+    <string name="settings_language_note">端末の言語に従うか、このアプリだけの言語を選べます。</string>
+    <string name="onboarding_language_title">言語を選択</string>
+    <string name="onboarding_language_sub">アプリで使う言語を選んでください。これからはこの言語で開きます。</string>
+    <string name="onboarding_language_note">設定 → アプリの言語でいつでも変更できます。</string>
+    <string name="onboarding_start">はじめる</string>
+    <string name="settings_guide">使い方</string>
+    <string name="guide_1">スキャン: 複数ページを続けて撮り、回転・トリミング・フィルターで整えます。</string>
+    <string name="guide_2">選んだ画質でページが1つのPDFになります。</string>
+    <string name="guide_3">結合は選んだ順に、圧縮はページを描き直して容量を減らします。</string>
+
+    <string name="processing">処理中…</string>
+    <string name="merge_default_prefix">結合</string>
+    <string name="compress_suffix">圧縮済み</string>
+    <string name="file_prefix">スキャン</string>
+</resources>
