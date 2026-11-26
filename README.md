@@ -58,7 +58,12 @@
 
 ## 광고 (AdMob)
 
-- `ads/AdConfig.kt` 한 곳에서 테스트/실제 ID 를 바꿉니다. 지금은 Google 공식 테스트 ID.
+- 광고 ID 는 코드 상수가 아니라 `app/build.gradle.kts` 의 `buildConfigField` 가 넣습니다.
+  `ads/AdConfig.kt` 는 `BuildConfig.ADMOB_BANNER_UNIT_ID` / `ADMOB_INTERSTITIAL_UNIT_ID` 를 읽기만 하고,
+  앱 ID 는 `AndroidManifest.xml` 의 `${admobAppId}` 자리표시자가 받습니다.
+  - debug: Google 공식 테스트 ID (실기기에서 눌러도 계정에 문제 없음)
+  - release: AdMob 실제 ID — 앱 `ca-app-pub-4832055633016363~6067607403`, 배너 `…/7197369596`, 전면 `…/2192454922`
+  - 그래서 release `.aab` 의 매니페스트·dex 에는 테스트 ID 문자열이 0건입니다.
 - 배너는 하단 탭 바 **아래, 화면 맨 끝**에 붙습니다 (광고가 없으면 자리도 차지하지 않음).
   시스템 3버튼 내비게이션 바는 평소에 숨기고(아래를 스와이프하면 잠깐 표시), 보일 때는 배너가 그만큼 여백을 비켜 갑니다.
 - 전면 광고는 PDF 저장·병합·압축이 끝난 뒤, 준비된 광고가 있을 때만(최소 60초 간격) 표시합니다.
@@ -71,6 +76,22 @@ export GRADLE_USER_HOME=/workspace/buildenv/gradle-home
 ./gradlew lintDebug assembleDebug --offline
 # app/build/outputs/apk/debug/app-debug.apk
 ```
+
+### Play 스토어 업로드용 release `.aab`
+
+서명 키는 저장소 밖 `projects/keystores/topster-upload.jks` + `projects/keystores/keystore.properties`(권한 600)이고,
+`app/build.gradle.kts` 가 `../keystores/keystore.properties` 를 찾아 `signingConfigs.release` 를 만듭니다.
+두 파일은 `.gitignore` 로 제외되어 있습니다(**잃으면 이후 업데이트 서명 불가**).
+
+```bash
+./gradlew lintDebug assembleDebug --offline
+./gradlew bundleRelease --offline        # app/build/outputs/bundle/release/app-release.aab
+./gradlew assembleRelease --offline      # 실기기 테스트용 APK(같은 키로 서명)
+$JAVA_HOME/bin/jarsigner -verify app/build/outputs/bundle/release/app-release.aab   # "jar verified."
+```
+
+> 작업 환경 메모리가 작으면 `--no-daemon --max-workers=1 -Dorg.gradle.parallel=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx900m -XX:MaxMetaspaceSize=320m"` 로 R8 단계를 넘깁니다.
+> 한 번에 5분을 넘기면 `:app:compileReleaseKotlin` → `:app:minifyReleaseWithR8` → `bundleRelease` 처럼 나눠 실행해도 됩니다(캐시가 이어집니다).
 
 ## 검증
 
@@ -85,6 +106,19 @@ python3 tools/logic-check/verify.py
 
 `run.sh` 는 PdfWriter/Filters/ScanGeometry/FileNames 와 Check.kt 를 Gradle 캐시의
 kotlin-compiler-embeddable 로 컴파일해 실행합니다. 마지막 줄이 `ALL CHECKS PASSED` 이면 통과입니다.
+
+### 1.0.4 release 빌드 검증 결과 (Play 출시용)
+
+- `./gradlew lintDebug assembleDebug --offline` → **BUILD SUCCESSFUL**, lint `0 errors, 43 warnings`
+- `./gradlew bundleRelease --offline` → **BUILD SUCCESSFUL** → `app/build/outputs/bundle/release/app-release.aab` 7,027,101 bytes
+  (sha256 `d6fe7637fa48c776843af7e798dd88cb31d7f80df7bb42d03802f58958f2e223`)
+- 서명: `jarsigner -verify` → **jar verified.** / `CN=Topster, O=Topster, C=KR` / 인증서 만료 2054-04-13
+- AAB 매니페스트(`bundletool dump manifest`): `package=com.youngsu.scanpdf`, `versionCode=5`, `versionName=1.0.4`,
+  `minSdkVersion=26`, **`targetSdkVersion=36`**, `compileSdkVersion=36`,
+  `com.google.android.gms.ads.APPLICATION_ID = ca-app-pub-4832055633016363~6067607403`
+- AAB `base/dex/classes.dex`(5,215,132 bytes): 실제 배너 ID 1회·전면 ID 1회, **테스트 배너/전면 ID 0회**
+- debug APK: 병합 매니페스트 `APPLICATION_ID` 가 테스트 ID, dex 에 테스트 배너·전면 ID만 남고 실제 ID 0회
+- R8 축소(release)로 dex 가 debug(23.5MB, 11개)에서 5.2MB(1개)로 줄었습니다.
 
 ### 1.0.4 검증 결과 (첫 실행 언어 선택)
 
