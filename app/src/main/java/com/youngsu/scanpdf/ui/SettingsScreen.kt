@@ -6,7 +6,9 @@ import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -26,6 +28,7 @@ class SettingsScreen(activity: MainActivity) : Screen(activity) {
     private val content: LinearLayout
     private val qualityRows = LinkedHashMap<PdfQuality, LinearLayout>()
     private lateinit var languageValue: TextView
+    private lateinit var languageFlag: ImageView
     private val prefs = AppPrefs.get(activity)
 
     init {
@@ -94,7 +97,13 @@ class SettingsScreen(activity: MainActivity) : Screen(activity) {
         qualityRows.forEach { (quality, row) ->
             paintQualityRow(row, quality == prefs.quality)
         }
-        if (::languageValue.isInitialized) languageValue.text = languageLabel()
+        if (::languageValue.isInitialized) {
+            languageValue.text = languageLabel()
+            val tag = AppLanguage.currentTag()
+            val lang = AppLanguage.langOf(tag)
+            languageFlag.visibility = if (lang == null) View.GONE else View.VISIBLE
+            if (lang != null) languageFlag.setImageResource(lang.flag)
+        }
     }
 
     // ------------------------------------------------------------ 언어
@@ -128,36 +137,88 @@ class SettingsScreen(activity: MainActivity) : Screen(activity) {
         }
         texts.addView(languageValue)
         row.addView(texts, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT).apply { weight = 1f })
+        // 지금 고른 언어의 원형 국기
+        languageFlag = ImageView(activity).apply {
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            setImageResource(R.drawable.flag_ko)
+            visibility = View.GONE
+        }
+        row.addView(languageFlag, LinearLayout.LayoutParams(activity.dp(22f), activity.dp(22f)).apply {
+            rightMargin = activity.dp(8f)
+        })
         row.addView(Ui.icon(activity, R.drawable.ic_chevron_right, 18f, activity.getColor(R.color.text_tertiary)))
         return row
     }
 
     /** 선택 목록에 보여 줄 언어 이름 — 각 언어는 그 나라 말로 적는다 */
-    private fun languageLabel(tag: String = AppLanguage.currentTag()): String = when (tag) {
-        "" -> str(R.string.language_system)
-        "ko" -> "한국어"
-        "ja" -> "日本語"
-        "zh" -> "中文"
-        "es" -> "Español"
-        else -> "English"
-    }
+    private fun languageLabel(tag: String = AppLanguage.currentTag()): String =
+        if (tag.isEmpty()) str(R.string.language_system) else AppLanguage.langOf(tag)?.nativeName ?: "English"
 
+    /**
+     * 언어 고르기 — 13개(기기 언어 따르기 + 12개 언어)를 원형 국기와 함께 보여 준다.
+     * 고르면 그 자리에서 앱 전체가 새 언어로 다시 그려진다.
+     */
     private fun showLanguagePicker() {
-        val tags = AppLanguage.TAGS
-        val labels = tags.map { languageLabel(it) }.toTypedArray()
-        val checked = tags.indexOf(AppLanguage.currentTag()).coerceAtLeast(0)
-        // 안내 문구는 다이얼로그가 아니라 설정 화면의 언어 카드 아래에 적는다.
-        // (setMessage 와 setSingleChoiceItems 를 같이 쓰면 AppCompat AlertController 가
-        //  안내 문구만 그리고 목록(ListView)은 붙이지 않아 선택지가 사라진다 — 1.0.2 버그)
-        MaterialAlertDialogBuilder(activity)
-            .setTitle(R.string.language_title)
-            .setSingleChoiceItems(labels, checked) { dialog, which ->
-                dialog.dismiss()
-                // 고르는 즉시 앱 전체가 그 언어로 다시 그려진다 (카메라·편집·뷰어 포함)
-                AppLanguage.apply(tags[which])
+        val list = Ui.column(activity).apply {
+            setPadding(activity.dp(8f), activity.dp(6f), activity.dp(8f), activity.dp(6f))
+        }
+        var dialogRef: androidx.appcompat.app.AlertDialog? = null
+
+        fun rowFor(tag: String, flagRes: Int?, name: String) {
+            val selected = tag == AppLanguage.currentTag()
+            val row = Ui.row(activity).apply {
+                setPadding(activity.dp(10f), activity.dp(11f), activity.dp(10f), activity.dp(11f))
+                background = Ui.rounded(
+                    activity,
+                    activity.getColor(if (selected) R.color.accent_dim else android.graphics.Color.TRANSPARENT),
+                    14f
+                )
+                isClickable = true
+                isFocusable = true
+                setOnClickListener {
+                    dialogRef?.dismiss()
+                    AppLanguage.apply(tag)
+                }
             }
+            if (flagRes != null) {
+                row.addView(ImageView(activity).apply {
+                    setImageResource(flagRes)
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                }, LinearLayout.LayoutParams(activity.dp(22f), activity.dp(22f)).apply {
+                    rightMargin = activity.dp(12f)
+                })
+            } else {
+                row.addView(Ui.icon(activity, R.drawable.ic_language, 20f, activity.getColor(R.color.text_secondary)), LinearLayout.LayoutParams(activity.dp(22f), activity.dp(22f)).apply {
+                    rightMargin = activity.dp(12f)
+                })
+            }
+            row.addView(Ui.text(activity, name, 14f, activity.getColor(R.color.text_primary), bold = selected),
+                LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT).apply { weight = 1f })
+            if (selected) {
+                row.addView(Ui.icon(activity, R.drawable.ic_check, 17f, activity.getColor(R.color.accent)))
+            }
+            list.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        }
+
+        rowFor("", null, str(R.string.language_system))
+        AppLanguage.LANGS.forEach { lang -> rowFor(lang.tag, lang.flag, lang.nativeName) }
+
+        val scroll = ScrollView(activity).apply {
+            addView(list, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            setPadding(activity.dp(6f), 0, activity.dp(6f), 0)
+        }
+        val dialog = MaterialAlertDialogBuilder(activity)
+            .setTitle(R.string.language_title)
+            .setView(scroll)
             .setNegativeButton(R.string.cancel, null)
-            .show()
+            .create()
+        dialogRef = dialog
+        dialog.show()
+        // 긴 목록이 화면을 넘지 않게 높이를 제한한다
+        dialog.window?.setLayout(
+            (activity.resources.displayMetrics.widthPixels * 0.88f).toInt(),
+            (activity.resources.displayMetrics.heightPixels * 0.72f).toInt()
+        )
     }
 
     private fun section(title: String): View =
@@ -277,7 +338,7 @@ class SettingsScreen(activity: MainActivity) : Screen(activity) {
             background = Ui.rounded(activity, activity.getColor(R.color.surface_alt), 20f, activity.getColor(R.color.outline), ripple = false)
             setPadding(activity.dp(16f), activity.dp(6f), activity.dp(16f), activity.dp(10f))
         }
-        listOf(R.string.guide_1, R.string.guide_2, R.string.guide_3).forEach { res ->
+        listOf(R.string.guide_1, R.string.guide_2, R.string.guide_3, R.string.guide_4, R.string.guide_5).forEach { res ->
             val row = Ui.row(activity).apply {
                 gravity = Gravity.TOP
                 setPadding(0, activity.dp(9f), 0, activity.dp(9f))

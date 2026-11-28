@@ -84,6 +84,24 @@
             android:theme="@style/Theme.ScanPdf" />
 
         <activity
+            android:name=".ocr.OcrActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
+            android:exported="false"
+            android:theme="@style/Theme.ScanPdf" />
+
+        <activity
+            android:name=".sign.SignActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
+            android:exported="false"
+            android:theme="@style/Theme.ScanPdf" />
+
+        <activity
+            android:name=".edit.PageOrganizerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
+            android:exported="false"
+            android:theme="@style/Theme.ScanPdf" />
+
+        <activity
             android:name=".viewer.PdfViewerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
             android:exported="false"

@@ -8,7 +8,7 @@ package com.youngsu.scanpdf.pdf
  */
 object Filters {
 
-    enum class Kind { ORIGINAL, DOCUMENT, BW, GRAY }
+    enum class Kind { ORIGINAL, DOCUMENT, BW, GRAY, SHARP }
 
     /** [kind] 에 따라 [pixels] 를 제자리에서 바꾼다. */
     fun apply(kind: Kind, pixels: IntArray, width: Int, height: Int) {
@@ -17,6 +17,7 @@ object Filters {
             Kind.GRAY -> grayscale(pixels, width, height, stretch = true)
             Kind.DOCUMENT -> document(pixels, width, height)
             Kind.BW -> adaptiveThreshold(pixels, width, height)
+            Kind.SHARP -> shadowRemoval(pixels, width, height)
         }
     }
 
@@ -118,6 +119,123 @@ object Filters {
                 if (c >= 250) v = 255
                 v = (v + lift).coerceIn(0, 255)
                 pixels[index] = 0xFF000000.toInt() or (v shl 16) or (v shl 8) or v
+            }
+        }
+    }
+
+    /**
+     * 손 그림자·조명 얼룩을 지우고 종이를 흰색으로 만드는 '선명 문서' 필터.
+     *
+     * 1) 화면을 작은 타일로 나눠 타일마다 '종이 밝기'(밝은 쪽 90퍼센타일)를 구한다.
+     *    손가락 그림자나 스탠드 조명 때문에 종이가 어둡게 찍힌 부분은 이 값이 낮다.
+     * 2) 픽셀마다 주변 타일 값을 부드럽게 섞어(쌍선형) 배경 밝기를 구하고,
+     *    그 값이 255 가 되도록 각 채널을 나눠 준다 → 그림자가 사라지고 종이가 하얘진다.
+     * 3) 글자 경계를 살짝 세워(언샤프) 스캔본처럼 또렷하게 만든다.
+     *
+     * 색은 채널별로 같은 배율을 곱해 유지되므로 도장·형광펜 색이 살아남는다.
+     */
+    fun shadowRemoval(pixels: IntArray, width: Int, height: Int) {
+        if (width < 8 || height < 8) return
+        val gray = IntArray(pixels.size)
+        for (i in pixels.indices) gray[i] = luma(pixels[i])
+
+        val tile = (minOf(width, height) / 14).coerceIn(16, 48)
+        val cols = (width + tile - 1) / tile
+        val rows = (height + tile - 1) / tile
+        val background = FloatArray(cols * rows)
+        val histogram = IntArray(256)
+        for (row in 0 until rows) {
+            for (col in 0 until cols) {
+                histogram.fill(0)
+                val x0 = col * tile
+                val y0 = row * tile
+                val x1 = minOf(width, x0 + tile)
+                val y1 = minOf(height, y0 + tile)
+                var count = 0
+                for (y in y0 until y1) {
+                    val offset = y * width
+                    for (x in x0 until x1) {
+                        histogram[gray[offset + x]]++
+                        count++
+                    }
+                }
+                val target = (count * 0.9f).toInt().coerceAtLeast(1)
+                var sum = 0
+                var value = 255
+                for (level in 0..255) {
+                    sum += histogram[level]
+                    if (sum >= target) {
+                        value = level
+                        break
+                    }
+                }
+                background[row * cols + col] = value.toFloat()
+            }
+        }
+
+        // 종이 밝기의 하한 — 아주 어두운 타일(그림자 한가운데)도 이보다 낮게 잡지 않는다
+        val darkestPaper = ((levels(gray)[1] * 0.55f)).coerceAtLeast(40f)
+
+        val lift = FloatArray(pixels.size)
+        for (y in 0 until height) {
+            val fy = ((y + 0.5f) / tile - 0.5f).coerceIn(0f, (rows - 1).toFloat())
+            val r0 = fy.toInt()
+            val r1 = minOf(r0 + 1, rows - 1)
+            val ty = fy - r0
+            for (x in 0 until width) {
+                val fx = ((x + 0.5f) / tile - 0.5f).coerceIn(0f, (cols - 1).toFloat())
+                val c0 = fx.toInt()
+                val c1 = minOf(c0 + 1, cols - 1)
+                val tx = fx - c0
+                val top = background[r0 * cols + c0] * (1 - tx) + background[r0 * cols + c1] * tx
+                val bottom = background[r1 * cols + c0] * (1 - tx) + background[r1 * cols + c1] * tx
+                val paper = (top * (1 - ty) + bottom * ty).coerceAtLeast(darkestPaper)
+                lift[y * width + x] = 250f / paper
+            }
+        }
+
+        for (i in pixels.indices) {
+            val color = pixels[i]
+            val gain = lift[i]
+            var r = (((color shr 16) and 0xFF) * gain).toInt()
+            var g = (((color shr 8) and 0xFF) * gain).toInt()
+            var b = ((color and 0xFF) * gain).toInt()
+            if (r > 255) r = 255
+            if (g > 255) g = 255
+            if (b > 255) b = 255
+            pixels[i] = 0xFF000000.toInt() or (r shl 16) or (g shl 8) or b
+        }
+
+        // 글자 경계를 살짝 세운다 (밝기만 대상으로, 색은 그대로 둔다)
+        sharpen(pixels, width, height, amount = 0.55f)
+    }
+
+    /** 3x3 언샤프 — 밝기 차이만큼 각 채널을 밀어 준다. */
+    private fun sharpen(pixels: IntArray, width: Int, height: Int, amount: Float) {
+        val source = IntArray(pixels.size)
+        for (i in pixels.indices) source[i] = luma(pixels[i])
+        for (y in 0 until height) {
+            val row = y * width
+            for (x in 0 until width) {
+                val index = row + x
+                val center = source[index]
+                var around = 0
+                var count = 0
+                if (y > 0) { around += source[index - width]; count++ }
+                if (y < height - 1) { around += source[index + width]; count++ }
+                if (x > 0) { around += source[index - 1]; count++ }
+                if (x < width - 1) { around += source[index + 1]; count++ }
+                if (count == 0) continue
+                val delta = ((center - around / count.toFloat()) * amount).toInt()
+                if (delta == 0) continue
+                val color = pixels[index]
+                var r = ((color shr 16) and 0xFF) + delta
+                var g = ((color shr 8) and 0xFF) + delta
+                var b = (color and 0xFF) + delta
+                r = r.coerceIn(0, 255)
+                g = g.coerceIn(0, 255)
+                b = b.coerceIn(0, 255)
+                pixels[index] = 0xFF000000.toInt() or (r shl 16) or (g shl 8) or b
             }
         }
     }

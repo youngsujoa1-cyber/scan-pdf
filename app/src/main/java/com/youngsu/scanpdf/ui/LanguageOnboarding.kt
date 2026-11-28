@@ -14,6 +14,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -32,15 +33,6 @@ import java.util.Locale
  *  · 닫아도(뒤로 가기) 다시 묻지 않는다. 이후 설정 → 앱 언어에서 언제든 바꿀 수 있다.
  */
 object LanguageOnboarding {
-
-    /** 각 언어를 그 나라 말로 — 어느 언어로 열려 있어도 자기 언어를 알아볼 수 있게 */
-    private val NATIVE = mapOf(
-        "ko" to "한국어",
-        "en" to "English",
-        "ja" to "日本語",
-        "zh" to "中文",
-        "es" to "Español"
-    )
 
     fun show(activity: Activity) {
         val prefs = AppPrefs.get(activity)
@@ -87,18 +79,18 @@ object LanguageOnboarding {
 
         // ------------------------------------------------------- 언어 선택 카드
         var render: () -> Unit = {}
-        val chips = LinkedHashMap<String, TextView>()
+        val chips = LinkedHashMap<String, Chip>()
         var index = 0
         while (index < AppLanguage.TAGS.size) {
             val line = Ui.row(activity)
             for (column in 0 until 2) {
                 val code = AppLanguage.TAGS.getOrNull(index + column) ?: break
-                val chip = Ui.text(activity, "", 13f, activity.getColor(R.color.text_primary), maxLines = 2).apply {
+                // 원형 국기 + 그 나라 말 이름
+                val chip = Ui.row(activity).apply {
                     gravity = Gravity.CENTER
-                    includeFontPadding = false
-                    setPadding(activity.dp(8f), activity.dp(6f), activity.dp(8f), activity.dp(6f))
                     isClickable = true
                     isFocusable = true
+                    setPadding(activity.dp(8f), activity.dp(6f), activity.dp(8f), activity.dp(6f))
                     setOnClickListener {
                         if (tag != code) {
                             tag = code
@@ -106,8 +98,20 @@ object LanguageOnboarding {
                         }
                     }
                 }
-                chips[code] = chip
-                line.addView(chip, LinearLayout.LayoutParams(0, activity.dp(52f)).apply {
+                val flag = ImageView(activity).apply {
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                    val lang = AppLanguage.langOf(code)
+                    if (lang != null) setImageResource(lang.flag)
+                    else setImageResource(R.drawable.ic_language)
+                    imageTintList = if (lang == null) android.content.res.ColorStateList.valueOf(activity.getColor(R.color.text_secondary)) else null
+                }
+                chip.addView(flag, LinearLayout.LayoutParams(activity.dp(18f), activity.dp(18f)).apply {
+                    rightMargin = activity.dp(7f)
+                })
+                val label = Ui.text(activity, "", 12.5f, activity.getColor(R.color.text_primary), maxLines = 1)
+                chip.addView(label)
+                chips[code] = Chip(chip, label)
+                line.addView(chip, LinearLayout.LayoutParams(0, activity.dp(50f)).apply {
                     weight = 1f
                     if (column == 0) rightMargin = activity.dp(8f)
                 })
@@ -157,12 +161,13 @@ object LanguageOnboarding {
             AppLanguage.TAGS.forEach { code ->
                 val chip = chips[code] ?: return@forEach
                 val selected = code == tag
-                chip.text = NATIVE[code] ?: ctx.getString(R.string.language_system)
-                chip.typeface = if (selected)
+                val native = AppLanguage.langOf(code)?.nativeName ?: ctx.getString(R.string.language_system)
+                chip.label.text = native
+                chip.label.typeface = if (selected)
                     Typeface.create("sans-serif-medium", Typeface.BOLD)
                 else Typeface.create("sans-serif", Typeface.NORMAL)
-                chip.setTextColor(activity.getColor(if (selected) R.color.on_accent else R.color.text_primary))
-                chip.background = GradientDrawable().apply {
+                chip.label.setTextColor(activity.getColor(if (selected) R.color.on_accent else R.color.text_primary))
+                chip.root.background = GradientDrawable().apply {
                     cornerRadius = activity.dpf(14f)
                     setColor(activity.getColor(if (selected) R.color.accent else R.color.surface_high))
                     setStroke(activity.dp(1f), activity.getColor(if (selected) R.color.accent_strong else R.color.outline))
@@ -195,13 +200,16 @@ object LanguageOnboarding {
             }
         }
         dialog.show()
+        val metrics = activity.resources.displayMetrics
         dialog.window?.apply {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             setDimAmount(0.72f)
             setGravity(Gravity.CENTER)
-            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (metrics.heightPixels * 0.86f).toInt())
         }
     }
+
+    private class Chip(val root: LinearLayout, val label: TextView)
 
     /**
      * 고른 언어의 문구를 읽기 위한 컨텍스트 — 앱을 다시 그리지 않고도 카드가 미리 바뀐다.

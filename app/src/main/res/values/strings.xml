@@ -165,4 +165,72 @@
     <string name="merge_default_prefix">Merged</string>
     <string name="compress_suffix">compressed</string>
     <string name="file_prefix">Scan</string>
+
+    <!-- ==================================================== 1.1.0 새 기능 -->
+
+    <string name="action_ocr">Read text</string>
+    <string name="action_ocr_sub">Copy words from a page</string>
+    <string name="action_sign">Signature</string>
+    <string name="action_sign_sub">Put a signature on a PDF</string>
+    <string name="action_organize">Edit pages</string>
+    <string name="action_organize_sub">Reorder · delete · split</string>
+    <string name="filter_sharp">Clear</string>
+
+    <string name="ocr_title">Read text</string>
+    <string name="ocr_source_photo">Photo from gallery</string>
+    <string name="ocr_source_pdf">%1$s</string>
+    <string name="ocr_source_pdf_page">%1$s · page %2$d/%3$d</string>
+    <string name="ocr_language_section">TEXT LANGUAGE</string>
+    <string name="ocr_lang_auto">Auto</string>
+    <string name="ocr_lang_ko">한국어</string>
+    <string name="ocr_lang_en">English</string>
+    <string name="ocr_lang_zh">中文</string>
+    <string name="ocr_lang_ja">日本語</string>
+    <string name="ocr_reading">Reading text…</string>
+    <string name="ocr_empty">No text found. Try another language.</string>
+    <string name="ocr_copy_all">Copy all</string>
+    <string name="ocr_copied">Copied to clipboard</string>
+    <string name="ocr_load_failed">Could not load this page.</string>
+    <string name="ocr_pick_title">Read text from</string>
+    <string name="ocr_from_photo">Choose a photo</string>
+
+    <string name="sign_title">Add signature</string>
+    <string name="sign_page_of">Page %1$d / %2$d</string>
+    <string name="sign_hint_drag">Drag to move the signature, pinch to resize.</string>
+    <string name="sign_hint_empty">Add a signature first.</string>
+    <string name="sign_draw_action">Signature</string>
+    <string name="sign_remove">Remove</string>
+    <string name="sign_need_signature">Add a signature first.</string>
+    <string name="sign_suffix">signed</string>
+    <string name="sign_done_title">Signed PDF saved</string>
+    <string name="sign_leave_title">Leave without saving?</string>
+    <string name="sign_leave_body">The signature you placed will be lost.</string>
+    <string name="sign_leave_confirm">Leave</string>
+    <string name="sign_pick_title">Choose a PDF to sign</string>
+    <string name="sign_draw_title">Write your signature</string>
+    <string name="sign_draw_hint">Draw with your finger. Saved signatures appear below.</string>
+    <string name="sign_pen_black">Black</string>
+    <string name="sign_pen_blue">Blue</string>
+    <string name="sign_pen_red">Red</string>
+    <string name="sign_undo">Undo</string>
+    <string name="sign_clear">Clear</string>
+    <string name="sign_saved_section">SAVED SIGNATURES</string>
+    <string name="sign_use">Use this</string>
+
+    <string name="organize_title">Edit pages</string>
+    <string name="organize_hint">Long-press a page to change its order. Tap to select pages.</string>
+    <string name="organize_count">%1$d of %2$d pages</string>
+    <string name="organize_split">Split selection</string>
+    <string name="organize_split_n">Split %1$d pages</string>
+    <string name="organize_save">Save as new PDF</string>
+    <string name="organize_need_one">Keep at least one page.</string>
+    <string name="organize_suffix">pages</string>
+    <string name="organize_split_suffix">split</string>
+    <string name="organize_done_title">New PDF saved</string>
+    <string name="organize_split_done_title">Split PDF saved</string>
+    <string name="organize_progress">Page %1$d/%2$d</string>
+    <string name="organize_pick_title">Choose a PDF to edit</string>
+
+    <string name="guide_4">Read text pulls the words out of a page so you can copy them.</string>
+    <string name="guide_5">Edit pages reorders, deletes or splits pages into a new PDF. Sign puts your signature on a page.</string>
 </resources>

@@ -8,10 +8,13 @@ import com.youngsu.scanpdf.R
 import com.youngsu.scanpdf.ads.AdManager
 import com.youngsu.scanpdf.data.PdfItem
 import com.youngsu.scanpdf.data.PdfLibrary
+import com.youngsu.scanpdf.edit.PageOrganizerActivity
+import com.youngsu.scanpdf.ocr.OcrActivity
 import com.youngsu.scanpdf.pdf.CompressPreset
 import com.youngsu.scanpdf.pdf.PdfEngine
 import com.youngsu.scanpdf.util.ByteSize
 import com.youngsu.scanpdf.util.FileNames
+import com.youngsu.scanpdf.sign.SignActivity
 import com.youngsu.scanpdf.viewer.PdfViewerActivity
 import java.util.concurrent.Executors
 
@@ -37,6 +40,9 @@ object DocumentActions {
         val entries = ArrayList<Pair<String, () -> Unit>>()
         entries.add(activity.getString(R.string.open) to { open(activity, item) })
         entries.add(activity.getString(R.string.share) to { share(activity, item) })
+        entries.add(activity.getString(R.string.ocr_title) to { activity.startActivity(OcrActivity.intentForPdf(activity, item.file)) })
+        entries.add(activity.getString(R.string.sign_title) to { activity.startActivity(SignActivity.intent(activity, item.file)) })
+        entries.add(activity.getString(R.string.organize_title) to { activity.startActivity(PageOrganizerActivity.intent(activity, item.file)) })
         entries.add(activity.getString(R.string.rename) to { rename(activity, item, onChanged) })
         entries.add(activity.getString(R.string.compress_strength) to { compress(activity, item, onChanged) })
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

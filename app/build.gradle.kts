@@ -24,8 +24,8 @@ android {
         applicationId = "com.youngsu.scanpdf"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.0.4"
+        versionCode = 6
+        versionName = "1.1.0"
 
         // AdMob 앱 ID — 기본(debug)은 Google 공식 테스트 ID, release 는 buildTypes 에서 실제 ID 로 바꾼다.
         manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
@@ -98,6 +98,17 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        // Robolectric 이 받은 Android 런타임을 둘 홈 폴더 (없으면 "?" 로 잡혀 실패한다)
+        unitTests.all { test ->
+            test.systemProperty("user.home", "/workspace/.robolectric")
+            test.systemProperty("robolectric.logging", "stdout")
+            // Maven Central 이 이 환경에서 429 로 막혀 있어 Google 미러에서 받는다
+            test.systemProperty("robolectric.dependency.repo.url", "https://maven-central.storage-download.googleapis.com/maven2")
+        }
+    }
+
     lint {
         abortOnError = true
         checkReleaseBuilds = false
@@ -121,4 +132,14 @@ dependencies {
     implementation(libs.guava)
 
     implementation(libs.play.services.ads)
+
+    // 온디바이스 OCR — 한글·영문(라틴)·중국어·일본어 모델을 앱에 포함
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.mlkit.text.recognition.korean)
+    implementation(libs.mlkit.text.recognition.chinese)
+    implementation(libs.mlkit.text.recognition.japanese)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
 }

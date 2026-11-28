@@ -32,8 +32,11 @@ import com.youngsu.scanpdf.data.PdfLibrary
 import com.youngsu.scanpdf.data.ScanPage
 import com.youngsu.scanpdf.data.ScanSession
 import com.youngsu.scanpdf.edit.PageEditorActivity
+import com.youngsu.scanpdf.edit.PageOrganizerActivity
+import com.youngsu.scanpdf.ocr.OcrActivity
 import com.youngsu.scanpdf.pdf.PdfEngine
 import com.youngsu.scanpdf.scan.CameraScanActivity
+import com.youngsu.scanpdf.sign.SignActivity
 import com.youngsu.scanpdf.ui.dp
 import com.youngsu.scanpdf.ui.str
 import com.youngsu.scanpdf.util.ByteSize
@@ -88,6 +91,36 @@ class MainActivity : AppCompatActivity() {
         if (uri == null) return@registerForActivityResult
         val item = copyIntoLibrary(uri) ?: return@registerForActivityResult
         DocumentActions.compress(this, item) { refreshCurrentTab() }
+    }
+
+    /** 글자 인식에 쓸 사진 고르기 */
+    private val pickOcrImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri == null) return@registerForActivityResult
+        startActivity(OcrActivity.intentForImage(this, uri))
+    }
+
+    private val pickSignFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@registerForActivityResult
+        io.execute {
+            val item = copyIntoLibrary(uri)
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (item == null) Dialogs.toast(this, str(R.string.open_error))
+                else startActivity(SignActivity.intent(this, item.file))
+            }
+        }
+    }
+
+    private val pickOrganizeFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@registerForActivityResult
+        io.execute {
+            val item = copyIntoLibrary(uri)
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (item == null) Dialogs.toast(this, str(R.string.open_error))
+                else startActivity(PageOrganizerActivity.intent(this, item.file))
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -330,6 +363,82 @@ class MainActivity : AppCompatActivity() {
             }
         }
         dialog.show()
+    }
+
+    // ------------------------------------------------------- OCR / 서명 / 페이지
+
+    /** 글자 인식 — 갤러리 사진이나 보관함의 PDF 중에서 고른다 */
+    fun startOcr() {
+        val items = library.list()
+        val labels = ArrayList<String>()
+        labels.add(str(R.string.ocr_from_photo))
+        items.forEach { labels.add(it.name) }
+        if (items.isEmpty()) {
+            pickOcrImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            return
+        }
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.ocr_pick_title)
+            .setItems(labels.toTypedArray()) { _, which ->
+                if (which == 0) {
+                    pickOcrImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                } else {
+                    startActivity(OcrActivity.intentForPdf(this, items[which - 1].file))
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    /** 전자 서명 — 보관함의 PDF 를 고르고 쪽 위에 서명을 얹는다 */
+    fun startSign() {
+        pickPdf(R.string.sign_pick_title) { file -> startActivity(SignActivity.intent(this, file)) }
+    }
+
+    /** 페이지 편집 — 순서 바꾸기·삭제·나누기 */
+    fun startOrganize() {
+        pickPdf(R.string.organize_pick_title) { file -> startActivity(PageOrganizerActivity.intent(this, file)) }
+    }
+
+    private fun pickPdf(titleRes: Int, onPicked: (File) -> Unit) {
+        val items = library.list()
+        if (items.isEmpty()) {
+            pendingPdfAction = onPicked
+            pickPdfAny.launch(arrayOf("application/pdf"))
+            return
+        }
+        val labels = items.map { it.name }.toTypedArray()
+        MaterialAlertDialogBuilder(this)
+            .setTitle(titleRes)
+            .setItems(labels) { _, which -> onPicked(items[which].file) }
+            .setNeutralButton(R.string.merge_choose, null)
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+            .apply {
+                setOnShowListener {
+                    getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                        dismiss()
+                        pendingPdfAction = onPicked
+                        pickPdfAny.launch(arrayOf("application/pdf"))
+                    }
+                }
+            }
+            .show()
+    }
+
+    private var pendingPdfAction: ((File) -> Unit)? = null
+
+    private val pickPdfAny = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        val action = pendingPdfAction
+        pendingPdfAction = null
+        if (uri == null || action == null) return@registerForActivityResult
+        io.execute {
+            val item = copyIntoLibrary(uri)
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (item == null) Dialogs.toast(this, str(R.string.open_error)) else action(item.file)
+            }
+        }
     }
 
     // -------------------------------------------------------------- merge

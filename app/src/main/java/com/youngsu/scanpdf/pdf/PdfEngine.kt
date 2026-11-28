@@ -145,6 +145,106 @@ object PdfEngine {
         )
     }
 
+    /**
+     * 페이지를 골라 순서를 바꾸거나 일부만 남겨 새 PDF 로 다시 쓴다.
+     *
+     * [order] 는 원본 페이지 번호(0부터)의 목록이다. 예: [2, 0, 1] 은 셋째·첫째·둘째 쪽 순서,
+     * [0, 2] 는 첫째·셋째 쪽만 남긴다(나누기). 원본 페이지 크기(pt)는 그대로 유지한다.
+     */
+    fun rewrite(
+        source: File,
+        order: List<Int>,
+        target: File,
+        title: String,
+        quality: PdfQuality = PdfQuality.NORMAL,
+        onProgress: (Int, Int) -> Unit = { _, _ -> }
+    ): Int {
+        require(order.isNotEmpty()) { "페이지가 없습니다" }
+        val specs = ArrayList<PdfWriter.Page>(order.size)
+        openRenderer(source).use { renderer ->
+            order.forEachIndexed { position, index ->
+                if (index !in 0 until renderer.pageCount) {
+                    throw IllegalStateException("페이지 번호가 잘못되었습니다: ${index + 1}")
+                }
+                renderer.openPage(index).use { page ->
+                    val bitmap = renderPage(page, qualityScale(page, quality))
+                    try {
+                        val jpeg = PageRenderer.toJpeg(bitmap, quality.jpegQuality)
+                        specs.add(PdfWriter.Page(page.width.toFloat(), page.height.toFloat(), jpeg))
+                    } finally {
+                        bitmap.recycle()
+                    }
+                }
+                onProgress(position + 1, order.size)
+            }
+        }
+        writeAtomically(target, PdfWriter.write(specs, title))
+        return specs.size
+    }
+
+    /**
+     * 한 쪽 위에 서명·도장 그림을 얹어 새 PDF 로 저장한다.
+     *
+     * [rect] 는 그 쪽 안에서 서명이 놓일 자리(0~1 비율, 왼쪽 위 기준)다. 화면에서 끌고 키운
+     * 위치를 그대로 옮길 수 있도록 비율로 받는다. 서명 그림의 가로세로 비율은 찌그러뜨리지 않는다.
+     */
+    fun sign(
+        source: File,
+        target: File,
+        pageIndex: Int,
+        signature: Bitmap,
+        rect: android.graphics.RectF,
+        title: String,
+        quality: PdfQuality = PdfQuality.NORMAL,
+        onProgress: (Int, Int) -> Unit = { _, _ -> }
+    ): Int {
+        val specs = ArrayList<PdfWriter.Page>()
+        openRenderer(source).use { renderer ->
+            if (renderer.pageCount == 0) throw IllegalStateException("페이지가 없습니다")
+            val total = renderer.pageCount
+            for (index in 0 until total) {
+                renderer.openPage(index).use { page ->
+                    val bitmap = renderPage(page, qualityScale(page, quality))
+                    try {
+                        if (index == pageIndex) {
+                            val canvas = android.graphics.Canvas(bitmap)
+                            val area = android.graphics.RectF(
+                                rect.left * bitmap.width,
+                                rect.top * bitmap.height,
+                                rect.right * bitmap.width,
+                                rect.bottom * bitmap.height
+                            )
+                            drawSignature(canvas, signature, area)
+                        }
+                        val jpeg = PageRenderer.toJpeg(bitmap, quality.jpegQuality)
+                        specs.add(PdfWriter.Page(page.width.toFloat(), page.height.toFloat(), jpeg))
+                    } finally {
+                        bitmap.recycle()
+                    }
+                }
+                onProgress(index + 1, total)
+            }
+        }
+        writeAtomically(target, PdfWriter.write(specs, title))
+        return specs.size
+    }
+
+    /** 서명 그림을 [area] 안에 비율을 지켜 가운데 놓는다. */
+    private fun drawSignature(canvas: android.graphics.Canvas, signature: Bitmap, area: android.graphics.RectF) {
+        if (signature.width <= 0 || signature.height <= 0) return
+        val scale = minOf(area.width() / signature.width, area.height() / signature.height)
+        val w = signature.width * scale
+        val h = signature.height * scale
+        val left = area.left + (area.width() - w) / 2f
+        val top = area.top + (area.height() - h) / 2f
+        val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG or android.graphics.Paint.FILTER_BITMAP_FLAG)
+        canvas.drawBitmap(signature, null, android.graphics.RectF(left, top, left + w, top + h), paint)
+    }
+
+    /** 설정한 화질의 긴 변 픽셀에 맞는 그리기 배율 */
+    private fun qualityScale(page: PdfRenderer.Page, quality: PdfQuality): Float =
+        quality.maxDim.toFloat() / maxOf(page.width, page.height).coerceAtLeast(1)
+
     private fun renderPage(
         page: PdfRenderer.Page,
         scale: Float,

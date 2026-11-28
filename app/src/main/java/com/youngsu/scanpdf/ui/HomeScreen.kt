@@ -173,6 +173,22 @@ class HomeScreen(activity: MainActivity) : Screen(activity) {
         wrap.addView(row2, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             topMargin = activity.dp(12f)
         })
+
+        val row3 = Ui.row(activity)
+        row3.addView(tile(R.drawable.ic_ocr, R.string.action_ocr, R.string.action_ocr_sub) { activity.startOcr() },
+            LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT).apply { weight = 1f; rightMargin = activity.dp(6f) })
+        row3.addView(tile(R.drawable.ic_sign, R.string.action_sign, R.string.action_sign_sub) { activity.startSign() },
+            LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT).apply { weight = 1f; leftMargin = activity.dp(6f) })
+        wrap.addView(row3, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            topMargin = activity.dp(12f)
+        })
+
+        val row4 = Ui.row(activity)
+        row4.addView(tile(R.drawable.ic_pages, R.string.action_organize, R.string.action_organize_sub) { activity.startOrganize() },
+            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        wrap.addView(row4, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            topMargin = activity.dp(12f)
+        })
         return wrap
     }
 

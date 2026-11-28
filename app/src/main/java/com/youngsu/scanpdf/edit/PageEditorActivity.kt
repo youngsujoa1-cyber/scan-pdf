@@ -326,10 +326,11 @@ class PageEditorActivity : AppCompatActivity() {
     private fun buildChips() {
         chipsRow.removeAllViews()
         val kinds = listOf(
-            Filters.Kind.ORIGINAL to R.string.filter_original,
+            Filters.Kind.SHARP to R.string.filter_sharp,
             Filters.Kind.DOCUMENT to R.string.filter_document,
             Filters.Kind.BW to R.string.filter_bw,
-            Filters.Kind.GRAY to R.string.filter_gray
+            Filters.Kind.GRAY to R.string.filter_gray,
+            Filters.Kind.ORIGINAL to R.string.filter_original
         )
         kinds.forEach { (kind, label) ->
             val chip = Ui.text(this, str(label), 13f, getColor(R.color.text_secondary), bold = true).apply {

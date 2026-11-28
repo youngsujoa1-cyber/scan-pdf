@@ -26,7 +26,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.youngsu.scanpdf.R
 import com.youngsu.scanpdf.data.PdfItem
 import com.youngsu.scanpdf.data.PdfLibrary
+import com.youngsu.scanpdf.edit.PageOrganizerActivity
+import com.youngsu.scanpdf.ocr.OcrActivity
 import com.youngsu.scanpdf.pdf.PdfEngine
+import com.youngsu.scanpdf.sign.SignActivity
 import com.youngsu.scanpdf.ui.Dialogs
 import com.youngsu.scanpdf.ui.Ui
 import com.youngsu.scanpdf.ui.dp
@@ -173,6 +176,13 @@ class PdfViewerActivity : AppCompatActivity() {
         pagePill.visibility = View.VISIBLE
     }
 
+    /** 지금 보고 있는 쪽 번호 (0부터) */
+    private fun currentPageIndex(): Int {
+        val manager = recycler.layoutManager as? LinearLayoutManager ?: return 0
+        val first = manager.findFirstCompletelyVisibleItemPosition().let { if (it < 0) manager.findFirstVisibleItemPosition() else it }
+        return first.coerceAtLeast(0)
+    }
+
     private fun shareItem() {
         runCatching { startActivity(Intent.createChooser(library.shareIntent(item), str(R.string.share))) }
             .onFailure { Dialogs.toast(this, str(R.string.share_no_app)) }
@@ -180,6 +190,10 @@ class PdfViewerActivity : AppCompatActivity() {
 
     private fun showMenu() {
         val entries = ArrayList<Pair<String, () -> Unit>>()
+        val currentPage = currentPageIndex()
+        entries.add(str(R.string.ocr_title) to { startActivity(OcrActivity.intentForPdf(this, item.file, currentPage)) })
+        entries.add(str(R.string.sign_title) to { startActivity(SignActivity.intent(this, item.file, currentPage)) })
+        entries.add(str(R.string.organize_title) to { startActivity(PageOrganizerActivity.intent(this, item.file)) })
         entries.add(str(R.string.share) to { shareItem() })
         entries.add(str(R.string.rename) to { renameItem() })
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
