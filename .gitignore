@@ -34,3 +34,6 @@ tools/logic-check/out/
 google-services.json
 secrets.properties
 keystore.properties
+
+# ── Robolectric 테스트 런타임 캐시 ──────────────────────
+.robolectric-home/

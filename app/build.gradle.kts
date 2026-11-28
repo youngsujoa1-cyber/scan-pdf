@@ -100,9 +100,11 @@ android {
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
-        // Robolectric 이 받은 Android 런타임을 둘 홈 폴더 (없으면 "?" 로 잡혀 실패한다)
+        // Robolectric 이 받는 Android 런타임(android-all)을 둘 홈 폴더.
+        // 이 환경은 $HOME 이 없어 "?" 로 잡히므로 저장소 안 폴더를 홈으로 준다 (git 에는 올리지 않음).
+        val robolectricHome = rootProject.file(".robolectric-home").apply { mkdirs() }
         unitTests.all { test ->
-            test.systemProperty("user.home", "/workspace/.robolectric")
+            test.systemProperty("user.home", robolectricHome.absolutePath)
             test.systemProperty("robolectric.logging", "stdout")
             // Maven Central 이 이 환경에서 429 로 막혀 있어 Google 미러에서 받는다
             test.systemProperty("robolectric.dependency.repo.url", "https://maven-central.storage-download.googleapis.com/maven2")
